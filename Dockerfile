@@ -27,7 +27,9 @@ COPY --from=builder /usr/src/app/test ./test
 COPY --from=builder /usr/src/app/migrations ./migrations
 COPY --from=builder /usr/src/app/knexfile.js ./knexfile.js
 COPY --from=builder /usr/src/app/seeds ./seeds
-COPY --from=builder /usr/src/app/.env ./.env
+
+# Used just on local
+# COPY --from=builder /usr/src/app/.env ./.env
 
 # Expose API port
 EXPOSE 3000
