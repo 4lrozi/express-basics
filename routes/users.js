@@ -102,13 +102,13 @@ router.put(
     values.push(id); // for WHERE clause
 
     try {
-      const [resut] = await pool.query(
-        `UPDATE users SET ${fields.join(", ")} WHERE id = ?`,
+      const [updateInfo] = await pool.query(
+        `UPDATE users SET ${fields.join(', ')} WHERE id = ?`,
         values
       );
-      if (result.affectedRows === 0) {
-        return res.status(404).json({ error: "User not found." });
-      }
+      if (updateInfo.affectedRows === 0) {
+        return res.status(404).json({ error: 'User not found.' });
+      }      
       // Return the updated record
       const [[user]] = await pool.query(
         "SELECT id, name, email FROM users WHERE id = ?",
