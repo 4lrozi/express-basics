@@ -1,36 +1,49 @@
 name: CD
 
+# Trigger on pushes to main (adjust branch as needed)
 on:
   push:
     branches:
-      - main # or use tags: ['v*.*.*']
+      - main
 
 jobs:
     deploy:
-      needs: test-and-build # ensure CI passed
+      # Change this to the name of your CI job if different
+      needs: test-and-build
       runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+      steps:
+        # Step 1: Check out the code
+        - name: Checkout code
+          uses: actions/checkout@v3
 
-      - name: Set up SSH key
-        uses: webfactory/ssh-agent@v0.7.0
-        with:
-          ssh-private-key: ${{ secrets.DEPLOY_KEY }}
+        # Step 2: Start the SSH agent and add the deploy key
+        - name: Start SSH agent
+          uses: webfactory/ssh-agent@v0.7.0
+          with:
+            ssh-private-key: ${{ secrets.DEPLOY_KEY }}
 
-      - name: Deploy to ECS via SSH
-        uses: appleboy/ssh-action@v0.5.0
-        with:
-          host: ${{ secrets.DEPLOY_HOST }}
-          user: ${{ secrets.DEPLOY_USER }}
-          key: ${{ secrets.DEPLOY_KEY }}
-          port: 22
-          script: |
-            cd /home/your-user/express-basics
-            git pull origin main
-            docker compose pull
-            docker compose up -d --build
-            # Optionally run migrations:
-            docker compose exec api npm run migrate
-            docker compose exec api npm run seed
+        # Step 3: SSH into your server and run the deploy commands
+        - name: Deploy to VPS via SSH
+          uses: appleboy/ssh-action@v0.5.0
+          with:
+            host: ${{ secrets.DEPLOY_HOST }}       # e.g. "203.0.113.45"
+            user: ${{ secrets.DEPLOY_USER }}       # e.g. "deployer"
+            key: ${{ secrets.DEPLOY_KEY }}         # same private key
+            port: 22
+            script: |
+              # navigate to your app directory
+              cd /home/${{ secrets.DEPLOY_USER }}/express-basics
+
+              # fetch latest code and reset to main
+              git fetch --all
+              git reset --hard origin/main
+  
+              # rebuild and restart with Docker Compose
+              docker compose pull
+              docker compose up -d --build
+  
+              # (optional) run migrations and seeds
+              docker compose exec api npm run migrate
+              docker compose exec api npm run seed
+  
