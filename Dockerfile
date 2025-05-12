@@ -23,6 +23,7 @@ RUN npm install --production
 COPY --from=builder /usr/src/app/index.js ./index.js
 COPY --from=builder /usr/src/app/routes ./routes
 COPY --from=builder /usr/src/app/db.js ./db.js
+COPY --from=builder /usr/src/app/test ./test
 COPY --from=builder /usr/src/app/migrations ./migrations
 COPY --from=builder /usr/src/app/knexfile.js ./knexfile.js
 COPY --from=builder /usr/src/app/seeds ./seeds
