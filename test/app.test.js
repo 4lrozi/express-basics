@@ -1,6 +1,5 @@
 // tests/app.test.js
 const request = require('supertest');
-const express = require('express');
 
 // Import your Express app (you may need to export it from index.js)
 const app = require('../index');  
