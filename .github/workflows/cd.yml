@@ -1,0 +1,36 @@
+name: CD
+
+on:
+  push:
+    branches:
+      - main # or use tags: ['v*.*.*']
+
+jobs:
+    deploy:
+      needs: test-and-build # ensure CI passed
+      runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up SSH key
+        uses: webfactory/ssh-agent@v0.7.0
+        with:
+          ssh-private-key: ${{ secrets.DEPLOY_KEY }}
+
+      - name: Deploy to ECS via SSH
+        uses: appleboy/ssh-action@v0.5.0
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          user: ${{ secrets.DEPLOY_USER }}
+          key: ${{ secrets.DEPLOY_KEY }}
+          port: 22
+          script: |
+            cd /home/your-user/express-basics
+            git pull origin main
+            docker compose pull
+            docker compose up -d --build
+            # Optionally run migrations:
+            docker compose exec api npm run migrate
+            docker compose exec api npm run seed
