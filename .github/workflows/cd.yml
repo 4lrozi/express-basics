@@ -27,7 +27,7 @@ jobs:
           script: |
             cd /home/${{ secrets.DEPLOY_USER }}/express-basics
             git reset --hard origin/main
-            docker compose pull
-            docker compose up -d --build
-            docker compose exec api npm run migrate
-            docker compose exec api npm run seed
+            docker-compose pull
+            docker-compose up -d --build
+            docker-compose exec api npm run migrate
+            docker-compose exec api npm run seed
