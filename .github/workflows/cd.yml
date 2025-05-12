@@ -38,6 +38,9 @@ jobs:
             git fetch --all
             git reset --hard origin/main
 
+            # Write .env file from secret
+            echo "${{ secrets.ENV_FILE_BASE64 }}" | base64 -d > .env
+
             docker-compose pull
             docker-compose up -d --build
             docker-compose exec api npm run migrate
