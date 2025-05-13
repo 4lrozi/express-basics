@@ -51,6 +51,6 @@ jobs:
                 echo -n "."
             done
             echo " Database is up!"
-            
-            docker compose exec -T api npm run migrate
-            docker compose exec -T api npm run seed
+
+            docker-compose exec -T api npm run migrate
+            docker-compose exec -T api npm run seed
