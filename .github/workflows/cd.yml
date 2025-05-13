@@ -46,12 +46,11 @@ jobs:
 
             # Wait for the DB service to be healthy
             echo "Waiting for database to be ready…"
-            until docker-compose exec db mysqladmin ping -h db --silent; do
+            until docker-compose exec -T db mysqladmin ping -h db --silent; do
                 sleep 2
                 echo -n "."
             done
             echo " Database is up!"
 
-            # Run migrations & seeds in a one-off container (no TTY)
-            docker compose run --rm api npm run migrate
-            docker compose run --rm api npm run seed
+            docker-compose exec -T api npm run migrate
+            docker-compose exec -T api npm run seed
