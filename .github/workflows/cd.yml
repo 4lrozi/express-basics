@@ -54,4 +54,4 @@ jobs:
 
             # Run migrations & seeds in one-off containers (no TTY)
             docker-compose run -T --rm api npm run migrate
-            docker-compose run -T --rm api npm run seed
+            # docker-compose run -T --rm api npm run seed
