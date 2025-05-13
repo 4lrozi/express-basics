@@ -46,7 +46,7 @@ jobs:
 
             # Wait for the DB service to be healthy
             echo "Waiting for database to be ready…"
-            until docker compose exec db mysqladmin ping -h db --silent; do
+            until docker-compose exec db mysqladmin ping -h db --silent; do
                 sleep 2
                 echo -n "."
             done
