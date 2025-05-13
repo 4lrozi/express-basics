@@ -53,5 +53,5 @@ jobs:
             echo " Database is up!"
 
             # Run migrations & seeds in one-off containers (no TTY)
-            docker-compose run -T --rm api npm run migrate
+            docker-compose exec -T api npm run migrate
             # docker-compose run -T --rm api npm run seed
